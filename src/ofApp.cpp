@@ -47,7 +47,17 @@ void ofApp::update(){
 		cameraBlobs.clear();	
 		for(int i = 0; i < blobDetector.nBlobs; i++) {
 			ofxCvBlob *thisBlob = &blobDetector.blobs[i];
-			cameraBlobs.push_back(soundBlob(thisBlob->centroid, 0, 0.0, 0));
+			ofRectangle rect = thisBlob->boundingRect;
+			double area = rect.getArea();
+			double value = 0.0;
+			for(int y = rect.getTop(); y < rect.getBottom(); y++) {
+				for(int x = rect.getLeft(); x < rect.getRight(); x++) {
+					value += kinectCv.getPixels()[y * (int)kinectCv.getWidth() + x];
+				}
+			}
+			value /= area;
+
+			cameraBlobs.push_back(soundBlob(thisBlob->centroid, area, value, 0));
 		}
 
 		updateBlobs();
@@ -57,7 +67,6 @@ void ofApp::update(){
 //--------------------------------------------------------------
 void ofApp::draw(){
 	ofBackground(48);
-	//kinect.drawDepth(0, 0);
 	kinectCv.draw(0, 0);
 	
 	blobDetector.draw();	
@@ -67,7 +76,13 @@ void ofApp::draw(){
 		ofSetColor(128, 0, 0);
 		ofCircle(soundBlobs[i].pos, 20);
 		ofSetColor(0, 128, 0);
-		ofDrawBitmapString(ofToString(soundBlobs[i].voice), soundBlobs[i].pos);
+		ofDrawBitmapString(ofToString(soundBlobs[i].voice) + 
+				"\n" + 
+				ofToString(soundBlobs[i].area) +
+				"\n" +
+				ofToString(soundBlobs[i].value),	
+			soundBlobs[i].pos);
+		
 		ofPopStyle();
 	}	
 	
@@ -84,6 +99,8 @@ void ofApp::updateBlobs() {
 		int blobId = getBlobAtPosition(&soundBlobs, cameraBlobs[i].pos);
 		if(blobId >= 0) {
 			soundBlobs[blobId].pos = cameraBlobs[i].pos;
+			soundBlobs[blobId].area = cameraBlobs[i].area;
+			soundBlobs[blobId].value = cameraBlobs[i].value;
 			//cout << "updated blob #" << ofToString(blobId) << endl;
 		}
 		else {

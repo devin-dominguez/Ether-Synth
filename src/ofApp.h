@@ -42,11 +42,11 @@ class ofApp : public ofBaseApp{
 		bool voices[8] = {false};
 		unsigned int voiceNumber;
 		struct soundBlob {
-			soundBlob(ofVec2f pos, int area, double value, unsigned int voice) 
+			soundBlob(ofVec2f pos, double area, double value, unsigned int voice) 
 				: pos(pos), area(area), value(value), voice(voice) {}; 
 			
 			ofVec2f pos;
-			int area;
+			double area;
 			double value;
 			unsigned int voice;
 		};
