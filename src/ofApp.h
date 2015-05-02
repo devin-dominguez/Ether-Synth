@@ -34,16 +34,25 @@ class ofApp : public ofBaseApp{
 			ofParameter<int> blur;
 			ofParameter<int> minBlobSize;
 			ofParameter<int> maxBlobSize;
+			ofParameter<float> maxDistance;
 
 		} depthSettings;
 
+
+		bool voices[8] = {false};
+		unsigned int voiceNumber;
 		struct soundBlob {
-			soundBlob(int x, int y, int area, double value) : x(x), y(y), area(area), value(value) {}; 
-			int x;
-			int y;
+			soundBlob(ofVec2f pos, int area, double value, unsigned int voice) 
+				: pos(pos), area(area), value(value), voice(voice) {}; 
+			
+			ofVec2f pos;
 			int area;
 			double value;
+			unsigned int voice;
 		};
 
-		vector<soundBlob> cameraBlobs;
+		void updateBlobs();
+		int getBlobAtPosition(vector<soundBlob> *blobs, ofVec2f pos);
+
+		vector<soundBlob> cameraBlobs, soundBlobs;
 };

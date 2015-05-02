@@ -2,12 +2,15 @@
 
 //--------------------------------------------------------------
 void ofApp::setup(){
+	voiceNumber = 0;
+
 	depthSettings.gui.setup("Depth Settings");
 	depthSettings.gui.add(depthSettings.nearClip.set("Near Clip", 640, 500, 4000));
 	depthSettings.gui.add(depthSettings.farClip.set("Far Clip", 1620, 500, 4000));
 	depthSettings.gui.add(depthSettings.blur.set("Blur", 10, 1, 50));
 	depthSettings.gui.add(depthSettings.minBlobSize.set("Min Blob Size", 2000, 0, 25000));
 	depthSettings.gui.add(depthSettings.maxBlobSize.set("Max Blob Size", 35000, 0, 50000));
+	depthSettings.gui.add(depthSettings.maxDistance.set("Max Distance", 50, 0, 150));
 
 
 
@@ -44,8 +47,10 @@ void ofApp::update(){
 		cameraBlobs.clear();	
 		for(int i = 0; i < blobDetector.nBlobs; i++) {
 			ofxCvBlob *thisBlob = &blobDetector.blobs[i];
-			cameraBlobs.push_back(soundBlob(thisBlob->centroid.x, thisBlob->centroid.y, 0, 0.0));
+			cameraBlobs.push_back(soundBlob(thisBlob->centroid, 0, 0.0, 0));
 		}
+
+		updateBlobs();
 	}
 }
 
@@ -57,10 +62,12 @@ void ofApp::draw(){
 	
 	blobDetector.draw();	
 	
-	for(unsigned int i = 0; i < cameraBlobs.size(); i++) {
+	for(unsigned int i = 0; i < soundBlobs.size(); i++) {
 		ofPushStyle();
 		ofSetColor(128, 0, 0);
-		ofCircle(cameraBlobs[i].x, cameraBlobs[i].y, 20);
+		ofCircle(soundBlobs[i].pos, 20);
+		ofSetColor(0, 128, 0);
+		ofDrawBitmapString(ofToString(soundBlobs[i].voice), soundBlobs[i].pos);
 		ofPopStyle();
 	}	
 	
@@ -68,6 +75,55 @@ void ofApp::draw(){
 	
 	depthSettings.gui.draw();
 }
+
+
+//--------------------------------------------------------------
+void ofApp::updateBlobs() {
+	//add blobs to cam
+	for(unsigned int i = 0; i < cameraBlobs.size(); i++) {
+		int blobId = getBlobAtPosition(&soundBlobs, cameraBlobs[i].pos);
+		if(blobId >= 0) {
+			soundBlobs[blobId].pos = cameraBlobs[i].pos;
+			//cout << "updated blob #" << ofToString(blobId) << endl;
+		}
+		else {
+			soundBlob newBlob = cameraBlobs[i];
+			unsigned int n = 0;
+			while(voices[n]) {
+				n++;
+			}
+			newBlob.voice = n;
+			voices[n] = true;
+
+			soundBlobs.push_back(newBlob);
+			cout << "added blob #" << ofToString(newBlob.voice) <<endl;
+				
+		}
+	}
+
+	//remove blobs	
+	for(unsigned int i = 0; i < soundBlobs.size(); i++) {
+		int blobId = getBlobAtPosition(&cameraBlobs, soundBlobs[i].pos); 
+		if(blobId < 0) {
+			cout << "removed blob #" << ofToString(soundBlobs[i].voice) << endl;
+			voices[soundBlobs[i].voice] = false;
+			soundBlobs.erase(soundBlobs.begin() + i);
+		}
+	
+	}
+}
+
+
+//--------------------------------------------------------------
+int ofApp::getBlobAtPosition(vector<soundBlob> *blobs, ofVec2f pos) {
+	for(unsigned int i = 0; i < blobs->size(); i++) {
+		if( (*blobs)[i].pos.distance(pos) <= depthSettings.maxDistance ) {
+			return i;
+		}
+	}
+	return -1;
+}
+
 
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
