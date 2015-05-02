@@ -9,7 +9,7 @@ void BlobMaster::setup() {
 	}
 
 	gui.setup("Depth Settings");
-	gui.setPosition(650, 10);
+	gui.setPosition(660, 10);
 	gui.add(nearClip.set("Near Clip", 500, 500, 4000));
 	gui.add(farClip.set("Far Clip", 1760, 500, 4000));
 	gui.add(blur.set("Blur", 10, 1, 50));
@@ -23,6 +23,8 @@ void BlobMaster::setup() {
 	kinect.open();
 
 	drawGui = true;
+
+	viewport.set(10, 10, 640, 480);
 }
 
 //--------------------------------------------------------------
@@ -71,15 +73,17 @@ void BlobMaster::update() {
 
 //--------------------------------------------------------------
 void BlobMaster::draw() {
-
+	ofPushView();
+	ofViewport(viewport);
+	ofSetupScreen();
 	kinectCv.draw(0, 0);
 	
 //	blobDetector.draw();	
 	
 	for(unsigned int i = 0; i < soundBlobs.size(); i++) {
 		ofPushStyle();
-		ofSetColor(128, 0, 0);
-		ofCircle(soundBlobs[i].pos, 50 * (1 - soundBlobs[i].z / 255.0 ));
+		ofSetColor(128, 0, 0, 128);
+		ofCircle(soundBlobs[i].pos , 50 * (1 - soundBlobs[i].z / 255.0 ));
 		ofSetColor(0, 128, 0, .5);
 //		ofDrawBitmapString(ofToString(soundBlobs[i].voice) + 
 //				"\n" + 
@@ -91,7 +95,7 @@ void BlobMaster::draw() {
 		ofPopStyle();
 	}	
 	
-	
+	ofPopView();	
 	if(drawGui) {	
 		gui.draw();
 	}
@@ -122,7 +126,7 @@ void BlobMaster::updateBlobs() {
 			voices[n] = true;
 
 			soundBlobs.push_back(newBlob);
-			cout << "added blob #" << ofToString(newBlob.voice) <<endl;
+			//cout << "added blob #" << ofToString(newBlob.voice) <<endl;
 			soundEvents.push_back(soundEvent(newBlob.voice, 1));			
 		}
 	}
@@ -131,7 +135,7 @@ void BlobMaster::updateBlobs() {
 	for(unsigned int i = 0; i < soundBlobs.size(); i++) {
 		int blobId = getBlobAtPosition(&cameraBlobs, soundBlobs[i].pos); 
 		if(blobId < 0) {
-			cout << "removed blob #" << ofToString(soundBlobs[i].voice) << endl;
+			//cout << "removed blob #" << ofToString(soundBlobs[i].voice) << endl;
 			voices[soundBlobs[i].voice] = false;
 			soundEvents.push_back(soundEvent(soundBlobs[i].voice, 0));
 			soundBlobs.erase(soundBlobs.begin() + i);

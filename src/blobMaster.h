@@ -53,6 +53,8 @@ class BlobMaster {
 		void updateBlobs();
 		int getBlobAtPosition(vector<soundBlob> *blobs, ofVec2f pos);
 
+		ofRectangle viewport;
+
 		vector<soundBlob> cameraBlobs, soundBlobs;
 		vector<soundEvent> soundEvents;
 };

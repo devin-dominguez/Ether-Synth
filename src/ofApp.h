@@ -24,7 +24,8 @@ class ofApp : public ofBaseApp{
 
 		BlobMaster blobMaster;
 		OscMaster oscMaster;
-		
+			
+		int time;	
 		ofTrueTypeFont fonty;
-
+		ofColor bgColor, bgTarget;
 };

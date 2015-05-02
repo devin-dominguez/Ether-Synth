@@ -4,26 +4,29 @@ void OscMaster::setup() {
 	oscOut.setup("localhost", 6666);
 	
 	fmGui.setup("Synth Settings");
-	fmGui.setPosition(650, 160);
+	fmGui.setPosition(660, 160);
 	fmGui.add(volume.set("Volume", .5, 0, 1));
 
-	fmGui.add(synthType.set("Synth Type", 0, 0, 1));
+	fmGui.add(timbre.set("Synth", 0, 0, 3));
 	fmGui.add(cont.set("Continuous Pitch", true));
 	fmGui.add(steps.set("Scale Steps", 25, 1, 64));
 	fmGui.add(scale.set("Scale", 1, 0, 2));
 	fmGui.add(tonic.set("Tonic", 64, 32, 256));
 	fmGui.add(drone.set("Drone Level", .75, 0, 1));
+	fmGui.add(synthType.set("B-B-B-BONUS MODE!!!", false));
 	lastMode = false;
 	lastScale = -1;
 	lastTonic = -1;
 	lastSynth = -1;
 
 	bbGui.setup("Synth Settings");
-	bbGui.setPosition(650, 160);
+	bbGui.setPosition(660, 160);
 
 	bbGui.add(volume);
+	bbGui.add(tempo.set("Tempo", 176, 100, 200));
 	bbGui.add(synthType);
-
+	lastTempo = -1;
+	lastTimbre = -1;
 }
 
 //--------------------------------------------------------------
@@ -71,12 +74,14 @@ void OscMaster::draw() {
 		for(int i = 0; i < steps; i++) {
 			ofPushStyle();
 			ofNoFill();
+			ofSetColor(255);
 			for(unsigned int h = 0; h < hilight.size(); h++) {
 				if(i == hilight[h]) {
+					ofSetColor(255, 255, 255, 128);
 					ofFill();
 				}
 			}
-			ofRect(640 * i / steps, 0, 640 / steps, 480);
+			ofRect(640 * i / steps + 10, 10, 640 / steps, 480);
 			ofPopStyle();
 		}
 	}
@@ -106,6 +111,11 @@ void OscMaster::addMessage(int voice, string address, double value) {
 
 void OscMaster::fmSynth(vector<BlobMaster::soundBlob> blobs, vector<BlobMaster::soundEvent> events) {
 	
+	if(timbre != lastTimbre) {
+		lastTimbre = timbre;
+		addMessage(-1, "timbre", timbre);
+	}
+
 	if(cont) {
 		continuous(blobs, events);
 		if(!lastMode) {
@@ -138,6 +148,10 @@ void OscMaster::fmSynth(vector<BlobMaster::soundBlob> blobs, vector<BlobMaster::
 
 
 void OscMaster::bbSynth(vector<BlobMaster::soundBlob> blobs, vector<BlobMaster::soundEvent> events) {
+	if(tempo != lastTempo) {
+		lastTempo = tempo;
+		addMessage(-1, "tempo", tempo);
+	}	
 
 	for(int v = 0; v < steps; v++) {
 		bool trig = false;
@@ -175,4 +189,10 @@ void OscMaster::discreet(vector<BlobMaster::soundBlob> blobs, vector<BlobMaster:
 		
 		hilight.push_back((int)(steps * blobs[i].pos.x / 640.0));
 	}
+}
+
+
+int OscMaster::getSynth() {
+	if(synthType) return 4;
+	else return timbre;
 }

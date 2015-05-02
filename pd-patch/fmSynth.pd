@@ -1,4 +1,4 @@
-#N canvas 0 45 1438 1033 10;
+#N canvas 959 45 959 235 10;
 #X obj 662 67 r oscIn;
 #X obj 662 89 route voice\$1;
 #X obj 662 111 route spawn x y z area;
@@ -16,7 +16,7 @@
 #X obj 798 284 s \$0.z;
 #X msg 546 193 \$1;
 #X obj 546 215 s \$0.spawn;
-#X obj 168 257 r \$0.spawn;
+#X obj 170 252 r \$0.spawn;
 #X obj 168 279 sel 0;
 #X obj 118 332 pack f f;
 #X msg 168 301 0;
@@ -59,10 +59,10 @@
 #X obj 657 413 t f f;
 #X obj 657 457 tabread scale;
 #X obj 379 652 expr~ if($f3==0 \, $v1 \, $v2);
-#X obj 984 539 r oscIn;
-#X obj 984 561 route voice-1;
-#X obj 984 583 route mode;
-#X msg 984 605 \$1;
+#X obj 816 481 r oscIn;
+#X obj 816 503 route voice-1;
+#X obj 816 525 route mode;
+#X msg 816 547 \$1;
 #X obj 657 391 r \$0.x;
 #X obj 648 514 *;
 #X obj 662 583 sig~;

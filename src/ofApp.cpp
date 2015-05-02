@@ -2,10 +2,19 @@
 
 //--------------------------------------------------------------
 void ofApp::setup(){
+	ofSetWindowShape(880, 500);
+	
+	ofSetFrameRate(60);
+	ofEnableAlphaBlending();
+
 	blobMaster.setup();
 	oscMaster.setup();
 
-	fonty.loadFont("Akashi.ttf", 96);
+	fonty.loadFont("Akashi.ttf", 48);
+	bgColor = ofColor(0);
+	bgTarget = ofColor(48, 16, 0);
+
+	time = 0;
 }
 
 //--------------------------------------------------------------
@@ -19,10 +28,34 @@ void ofApp::update(){
 
 //--------------------------------------------------------------
 void ofApp::draw(){
-	ofBackground(48);
+	switch(oscMaster.getSynth()) {
+		case 0:
+			bgTarget = ofColor(48, 16, 0);
+			break;
+		case 1:
+			bgTarget = ofColor(72, 72, 96);
+			break;
+		case 2:
+			bgTarget = ofColor(12, 64, 12);
+			break;
+		case 3:
+			bgTarget = ofColor(96, 0, 96);
+			break;
+		case 4:
+			if(time > 15) {
+				time = 0;
+				bgTarget = ofColor(ofRandom(255), ofRandom(255), ofRandom(255));
+			}
+			else {
+				time++;
+			}
+			break;
+	}
+	bgColor = bgColor.getLerped(bgTarget, .1);
+	ofBackground(bgColor);
 	blobMaster.draw();
 	oscMaster.draw();
-	fonty.drawString("ETHER\nSYNTH", 150, 640);
+	fonty.drawString("ETHER\nSYNTH", 660, 400);
 }
 
 
