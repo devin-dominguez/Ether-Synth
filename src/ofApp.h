@@ -36,4 +36,14 @@ class ofApp : public ofBaseApp{
 			ofParameter<int> maxBlobSize;
 
 		} depthSettings;
+
+		struct soundBlob {
+			soundBlob(int x, int y, int area, double value) : x(x), y(y), area(area), value(value) {}; 
+			int x;
+			int y;
+			int area;
+			double value;
+		};
+
+		vector<soundBlob> cameraBlobs;
 };

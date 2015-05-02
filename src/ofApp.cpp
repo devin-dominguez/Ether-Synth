@@ -3,11 +3,11 @@
 //--------------------------------------------------------------
 void ofApp::setup(){
 	depthSettings.gui.setup("Depth Settings");
-	depthSettings.gui.add(depthSettings.nearClip.set("Near Clip", 500, 500, 4000));
-	depthSettings.gui.add(depthSettings.farClip.set("Far Clip", 4000, 500, 4000));
-	depthSettings.gui.add(depthSettings.blur.set("Blur", 1, 1, 50));
-	depthSettings.gui.add(depthSettings.minBlobSize.set("Min Blob Size", 25, 0, 25000));
-	depthSettings.gui.add(depthSettings.maxBlobSize.set("Max Blob Size", 25, 0, 25000));
+	depthSettings.gui.add(depthSettings.nearClip.set("Near Clip", 640, 500, 4000));
+	depthSettings.gui.add(depthSettings.farClip.set("Far Clip", 1620, 500, 4000));
+	depthSettings.gui.add(depthSettings.blur.set("Blur", 10, 1, 50));
+	depthSettings.gui.add(depthSettings.minBlobSize.set("Min Blob Size", 2000, 0, 25000));
+	depthSettings.gui.add(depthSettings.maxBlobSize.set("Max Blob Size", 35000, 0, 50000));
 
 
 
@@ -39,8 +39,13 @@ void ofApp::update(){
 		kinectCv.setFromPixels(filterTable);
 		kinectCv.blur(depthSettings.blur * 2 - 1);
 
-		blobDetector.findContours(kinectCv, depthSettings.minBlobSize, depthSettings.maxBlobSize, 4, false, true);
+		blobDetector.findContours(kinectCv, depthSettings.minBlobSize, depthSettings.maxBlobSize, 4, false, false);
 
+		cameraBlobs.clear();	
+		for(int i = 0; i < blobDetector.nBlobs; i++) {
+			ofxCvBlob *thisBlob = &blobDetector.blobs[i];
+			cameraBlobs.push_back(soundBlob(thisBlob->centroid.x, thisBlob->centroid.y, 0, 0.0));
+		}
 	}
 }
 
@@ -49,8 +54,15 @@ void ofApp::draw(){
 	ofBackground(48);
 	//kinect.drawDepth(0, 0);
 	kinectCv.draw(0, 0);
+	
 	blobDetector.draw();	
 	
+	for(unsigned int i = 0; i < cameraBlobs.size(); i++) {
+		ofPushStyle();
+		ofSetColor(128, 0, 0);
+		ofCircle(cameraBlobs[i].x, cameraBlobs[i].y, 20);
+		ofPopStyle();
+	}	
 	
 	
 	
