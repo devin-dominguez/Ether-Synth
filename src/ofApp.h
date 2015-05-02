@@ -1,10 +1,9 @@
 #pragma once
 
 #include "ofMain.h"
-#include "ofxOpenCv.h"
-#include "ofxKinect.h"
-#include "ofxGui.h"
-#include "ofxOsc.h"
+
+#include "blobMaster.h"
+#include "oscMaster.h"
 
 class ofApp : public ofBaseApp{
 
@@ -22,37 +21,9 @@ class ofApp : public ofBaseApp{
 		void windowResized(int w, int h);
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
-		
-		ofxKinect kinect;
-		ofxCvGrayscaleImage kinectCv;
-		ofxCvContourFinder blobDetector;
 
-		struct {
-			ofxPanel gui;
-			ofParameter<int> nearClip;
-			ofParameter<int> farClip;
-			ofParameter<int> blur;
-			ofParameter<int> minBlobSize;
-			ofParameter<int> maxBlobSize;
-			ofParameter<float> maxDistance;
-
-		} depthSettings;
+		BlobMaster blobMaster;
+		OscMaster oscMaster;
 
 
-		bool voices[8] = {false};
-		unsigned int voiceNumber;
-		struct soundBlob {
-			soundBlob(ofVec2f pos, double area, double value, unsigned int voice) 
-				: pos(pos), area(area), value(value), voice(voice) {}; 
-			
-			ofVec2f pos;
-			double area;
-			double value;
-			unsigned int voice;
-		};
-
-		void updateBlobs();
-		int getBlobAtPosition(vector<soundBlob> *blobs, ofVec2f pos);
-
-		vector<soundBlob> cameraBlobs, soundBlobs;
 };
