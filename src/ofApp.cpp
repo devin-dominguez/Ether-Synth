@@ -20,6 +20,7 @@ void ofApp::update(){
 void ofApp::draw(){
 	ofBackground(48);
 	blobMaster.draw();
+	oscMaster.draw();
 }
 
 

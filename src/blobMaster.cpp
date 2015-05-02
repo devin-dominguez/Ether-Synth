@@ -9,8 +9,9 @@ void BlobMaster::setup() {
 	}
 
 	gui.setup("Depth Settings");
-	gui.add(nearClip.set("Near Clip", 640, 500, 4000));
-	gui.add(farClip.set("Far Clip", 1620, 500, 4000));
+	gui.setPosition(650, 10);
+	gui.add(nearClip.set("Near Clip", 500, 500, 4000));
+	gui.add(farClip.set("Far Clip", 1760, 500, 4000));
 	gui.add(blur.set("Blur", 10, 1, 50));
 	gui.add(minBlobSize.set("Min Blob Size", 2000, 0, 25000));
 	gui.add(maxBlobSize.set("Max Blob Size", 35000, 0, 50000));
@@ -21,10 +22,12 @@ void BlobMaster::setup() {
 	kinect.init(false, false);
 	kinect.open();
 
+	drawGui = true;
 }
 
 //--------------------------------------------------------------
 void BlobMaster::update() {
+	soundEvents.clear();
 	kinect.setDepthClipping(nearClip, farClip);
 
 	kinect.update();
@@ -49,18 +52,17 @@ void BlobMaster::update() {
 			ofxCvBlob *thisBlob = &blobDetector.blobs[i];
 			ofRectangle rect = thisBlob->boundingRect;
 			double area = rect.getArea();
-			double value = 0.0;
+			double z = 0.0;
 			for(int y = rect.getTop(); y < rect.getBottom(); y++) {
 				for(int x = rect.getLeft(); x < rect.getRight(); x++) {
-					value += kinectCv.getPixels()[y * (int)kinectCv.getWidth() + x];
+					z += kinectCv.getPixels()[y * (int)kinectCv.getWidth() + x];
 				}
 			}
-			value /= area;
+			z /= area;
 
-			cameraBlobs.push_back(soundBlob(thisBlob->centroid, area, value, 0));
+			cameraBlobs.push_back(soundBlob(thisBlob->centroid, area, z, 0));
 		}
 
-		soundEvents.clear();
 		updateBlobs();
 	}
 
@@ -77,14 +79,14 @@ void BlobMaster::draw() {
 	for(unsigned int i = 0; i < soundBlobs.size(); i++) {
 		ofPushStyle();
 		ofSetColor(128, 0, 0);
-		ofCircle(soundBlobs[i].pos, 50 * (1 - soundBlobs[i].value / 255.0 ));
-		ofSetColor(0, 128, 0);
-		ofDrawBitmapString(ofToString(soundBlobs[i].voice) + 
-				"\n" + 
-				ofToString(soundBlobs[i].area) +
-				"\n" +
-				ofToString(soundBlobs[i].value),	
-			soundBlobs[i].pos);
+		ofCircle(soundBlobs[i].pos, 50 * (1 - soundBlobs[i].z / 255.0 ));
+		ofSetColor(0, 128, 0, .5);
+//		ofDrawBitmapString(ofToString(soundBlobs[i].voice) + 
+//				"\n" + 
+//				ofToString(soundBlobs[i].area) +
+//				"\n" +
+//				ofToString(soundBlobs[i].z),	
+//			soundBlobs[i].pos);
 		
 		ofPopStyle();
 	}	
@@ -107,7 +109,7 @@ void BlobMaster::updateBlobs() {
 		if(blobId >= 0) {
 			soundBlobs[blobId].pos = cameraBlobs[i].pos;
 			soundBlobs[blobId].area = cameraBlobs[i].area;
-			soundBlobs[blobId].value = cameraBlobs[i].value;
+			soundBlobs[blobId].z = cameraBlobs[i].z;
 			//cout << "updated blob #" << ofToString(blobId) << endl;
 		}
 		else {

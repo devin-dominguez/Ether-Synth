@@ -8,12 +8,12 @@
 class BlobMaster {
 	public:
 		struct soundBlob {
-			soundBlob(ofVec2f pos, double area, double value, unsigned int voice) 
-				: pos(pos), area(area), value(value), voice(voice) {}; 
+			soundBlob(ofVec2f pos, double area, double z, unsigned int voice) 
+				: pos(pos), area(area), z(z), voice(voice) {}; 
 			
 			ofVec2f pos;
 			double area;
-			double value;
+			double z;
 			unsigned int voice;
 		};
 
