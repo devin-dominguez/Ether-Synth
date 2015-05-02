@@ -19,16 +19,25 @@ class OscMaster {
 		void discreet(vector<BlobMaster::soundBlob> blobs, vector<BlobMaster::soundEvent> events);
 
 		bool drawGui;
-		ofxPanel gui;
+		ofxPanel fmGui, bbGui;
+		ofParameter<float> volume;
+		ofParameter<int> synthType;
+
+	//fm
 		ofParameter<bool> cont;
 		ofParameter<int> steps;
 		ofParameter<int> scale;
 		ofParameter<int> tonic;	
 		ofParameter<float> drone;
-		
+
+		void fmSynth(vector<BlobMaster::soundBlob> blobs, vector<BlobMaster::soundEvent> events);
+		void bbSynth(vector<BlobMaster::soundBlob> blobs, vector<BlobMaster::soundEvent> events);
+
 		bool lastMode;
 		int lastScale;
 		int lastTonic;
+
+		int lastSynth;
 
 
 		vector<int> hilight;

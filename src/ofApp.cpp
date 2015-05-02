@@ -5,6 +5,7 @@ void ofApp::setup(){
 	blobMaster.setup();
 	oscMaster.setup();
 
+	fonty.loadFont("Akashi.ttf", 96);
 }
 
 //--------------------------------------------------------------
@@ -21,6 +22,7 @@ void ofApp::draw(){
 	ofBackground(48);
 	blobMaster.draw();
 	oscMaster.draw();
+	fonty.drawString("ETHER\nSYNTH", 150, 640);
 }
 
 

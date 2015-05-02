@@ -24,6 +24,7 @@ class ofApp : public ofBaseApp{
 
 		BlobMaster blobMaster;
 		OscMaster oscMaster;
-
+		
+		ofTrueTypeFont fonty;
 
 };
