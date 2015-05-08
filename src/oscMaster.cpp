@@ -4,7 +4,7 @@ void OscMaster::setup() {
 	oscOut.setup("localhost", 6666);
 	
 	fmGui.setup("Synth Settings");
-	fmGui.setPosition(660, 160);
+	fmGui.setPosition(660, 10);
 	fmGui.add(volume.set("Volume", .5, 0, 1));
 
 	fmGui.add(timbre.set("Synth", 0, 0, 3));
@@ -12,7 +12,7 @@ void OscMaster::setup() {
 	fmGui.add(steps.set("Scale Steps", 25, 1, 64));
 	fmGui.add(scale.set("Scale", 1, 0, 2));
 	fmGui.add(tonic.set("Tonic", 64, 32, 256));
-	fmGui.add(drone.set("Drone Level", .75, 0, 1));
+	fmGui.add(drone.set("Drone Level", 0, 0, 1));
 	fmGui.add(synthType.set("B-B-B-BONUS MODE!!!", false));
 	lastMode = false;
 	lastScale = -1;

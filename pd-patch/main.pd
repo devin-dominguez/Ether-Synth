@@ -1,9 +1,9 @@
-#N canvas 0 45 957 1033 10;
+#N canvas 0 45 1246 1033 10;
 #X obj 128 40 netreceive -u -b 6666;
 #X obj 128 62 oscparse;
 #X obj 128 84 list trim;
 #X obj 128 106 s oscIn;
-#N canvas 959 577 959 235 fmSynths 1;
+#N canvas 0 45 1246 1033 fmSynths 0;
 #X text 768 230 major;
 #X text 771 270 hijaz;
 #X text 771 310 minor;
@@ -233,7 +233,7 @@ if($f1==2 \, 1 \, 0) \; if($f1==3 \, 1 \, 0) \;;
 #X obj 111 285 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
 1;
 #X obj 111 305 s bbMod;
-#X obj 379 292 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+#X obj 379 292 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 1
 1;
 #X obj 379 312 s bbCrush;
 #X obj 286 282 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
@@ -507,6 +507,9 @@ if($f1==2 \, 1 \, 0) \; if($f1==3 \, 1 \, 0) \;;
 #X msg 390 112 \$1;
 #X obj 390 90 route fmSynth bbSynth;
 #X msg 474 155 \$1;
+#X obj 716 497 loadbang;
+#X obj 716 519 delay 5;
+#X msg 716 541 \; pd dsp 1 \;;
 #X connect 0 0 1 0;
 #X connect 1 0 2 0;
 #X connect 2 0 3 0;
@@ -542,3 +545,5 @@ if($f1==2 \, 1 \, 0) \; if($f1==3 \, 1 \, 0) \;;
 #X connect 28 0 27 0;
 #X connect 28 1 29 0;
 #X connect 29 0 24 0;
+#X connect 30 0 31 0;
+#X connect 31 0 32 0;

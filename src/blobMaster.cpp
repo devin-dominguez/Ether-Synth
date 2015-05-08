@@ -9,9 +9,9 @@ void BlobMaster::setup() {
 	}
 
 	gui.setup("Depth Settings");
-	gui.setPosition(660, 10);
+	gui.setPosition(660, 200);
 	gui.add(nearClip.set("Near Clip", 500, 500, 4000));
-	gui.add(farClip.set("Far Clip", 1760, 500, 4000));
+	gui.add(farClip.set("Far Clip", 1550, 500, 4000));
 	gui.add(blur.set("Blur", 10, 1, 50));
 	gui.add(minBlobSize.set("Min Blob Size", 2000, 0, 25000));
 	gui.add(maxBlobSize.set("Max Blob Size", 35000, 0, 50000));
@@ -22,7 +22,7 @@ void BlobMaster::setup() {
 	kinect.init(false, false);
 	kinect.open();
 
-	drawGui = true;
+	drawGui = false;
 
 	viewport.set(10, 10, 640, 480);
 }
