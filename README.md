@@ -16,6 +16,6 @@ Generate an oF project with the following addons and copy the contents of the Et
 
 Copy the contents of the EtherSynth data/ folder to your new project's data/ folder.
 
-Load up the pd-patch/main.pd in a version of vanilla PD recent enough to have native OSC support. Check if you have the [oscparse] object. Right now the patch expects a drum loop called amen.wav to be in the same folder as main.pd. This is not provided but any appropriately named drum loop should work pretty well.
+Load up the pd-patch/main.pd in a version of vanilla PD recent enough to have native OSC support. Check if you have the [oscparse] object.
 
 Plug in a Kinect and you are good to go.
