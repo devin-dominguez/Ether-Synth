@@ -5,7 +5,7 @@ Visit [www.dominguezaudio.com](http://www.dominguezaudio.com) for more info.
 
 Ether Synth uses [openFrameworks](http://www.openframeworks.cc) as well as some addons.
 
-The current version of Ether Synth was the grand prize winner of the first ever [HackitFresno](http://www.hackitfresno.com}.
+The current version of Ether Synth was the grand prize winner of the first ever [HackitFresno](http://www.hackitfresno.com).
 
 ##Use
 Generate an oF project with the following addons and copy the contents of the Ether Synth src/ folder to your new project's src/ folder.
